@@ -104,7 +104,7 @@ volumes:
 任意のPlayerに管理者権限を付与するには以下を実施してください
 ```
 # RCON クライアント起動
-docker exec -i minecraft_vanilla rcon-cli
+docker exec -i mc_vanilla rcon-cli
 
 # オペレータ権限を付与
 op username
