@@ -12,14 +12,15 @@ services:
       TYPE: "VANILLA"
       EULA: "TRUE"
       VERSION: "LATEST"
-      MOTD: "Carkn's Vanilla Server"
+      MOTD: "Vanilla Server"
+      DIFFICULTY: "normal"
       MAX_PLAYERS: 100
       MAX_WORLD_SIZE: 10000
       ENABLE_COMMAND_BLOCK: "TRUE"
       SNOOPER_ENABLED: "FALSE"
       VIEW_DISTANCE: 12
       MODE: "SURVIVAL"
-      PVP: "FALSE"
+      PVP: "TRUE"
       STOP_SERVER_ANNOUNCE_DELAY: 20
       GUI: "FALSE"
     volumes:
