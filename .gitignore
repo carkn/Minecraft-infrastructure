@@ -2,12 +2,13 @@
 .terraform/
 *.tfstate
 *.tfstate.*
+*.terraform.lock.hcl
 crash.log
 crash.*
 **/.terraform/*
-!/ssh/
-/ssh/*
-!/ssh/.gitkeep
+!*/ssh/
+*/ssh/*
+!*/ssh/.gitkeep
 .DS_Store
 Thumbs.db
 *.log
