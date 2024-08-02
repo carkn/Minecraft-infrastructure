@@ -37,6 +37,6 @@ variable "minecraft" {
     memory    = "4"
     plan      = "ssd"
     size      = "40"
-    password  = "Muzuka4Pw-"
+    password  = "password"
   }
 }

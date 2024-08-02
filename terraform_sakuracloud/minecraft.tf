@@ -56,7 +56,9 @@ resource "sakuracloud_server" "minecraft_server" {
     hostname = "minecraft"
     password = var.minecraft["password"]
     ssh_keys = [data.local_file.ssh_public_key.content]
-    note_ids = [sakuracloud_note.ubuntu_ufw.id]
+    note {
+      id = sakuracloud_note.ubuntu_ufw.id
+    }
     disable_pw_auth = true
   }
 }
