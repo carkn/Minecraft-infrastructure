@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  work:
+    container_name: infra-micra
+    build: .
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    working_dir: /data
+    command:
+      - sleep
+      - infinity
+    volumes:
+      - .:/data
+      - $HOME/.ssh:/root/.ssh

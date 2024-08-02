@@ -1,0 +1,15 @@
+*.retry
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*
+**/.terraform/*
+!/ssh/
+/ssh/*
+!/ssh/.gitkeep
+.DS_Store
+Thumbs.db
+*.log
+*.sql
+*.sqlite

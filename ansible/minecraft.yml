@@ -1,0 +1,107 @@
+- name: install docker and setting minecraft on ubuntu
+  hosts: all
+  become: true
+
+  vars:
+    local_compose_file: "./docker-compose.yml"
+    minecraft_directory: "/home/{{ ansible_user }}/minecraft"
+    remote_compose_file: "{{ minecraft_directory }}/docker-compose.yml"
+
+  tasks:
+    - name: update apt package index
+      apt:
+        update_cache: yes
+
+    - name: install necessary packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - ca-certificates
+        - curl
+        - wget
+        - gnupg
+        - lsb-release
+        - locales
+
+    - name: generate the ja_JP.UTF-8 locale
+      command: locale-gen ja_JP.UTF-8
+
+    - name: set system locale to ja_JP.UTF-8
+      command: localectl set-locale LC_CTYPE=ja_JP.UTF-8
+
+    - name: add docker's official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: set up the stable repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+        filename: docker 
+
+    - name: update apt package index after adding docker repository
+      apt:
+        update_cache: yes
+
+    - name: install docker engine
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: present
+
+    - name: add user to the docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: get docker compose latest release version
+      shell: |
+        curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4
+      register: docker_compose_version
+
+    - name: download docker compose binary
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version.stdout }}/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}"
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+
+    - name: ensure docker service is started and enabled
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: verify docker compose installation
+      shell: docker-compose --version
+      register: docker_compose_version_check
+
+    - name: debug docker compose version
+      debug:
+        msg: "Docker Compose version: {{ docker_compose_version_check.stdout }}"
+
+    - name: create minecraft directory in user's home
+      file:
+        path: "{{ minecraft_directory }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
+
+    - name: upload local docker-compose.yml to the server
+      copy:
+        src: "{{ local_compose_file }}"
+        dest: "{{ remote_compose_file }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0644'
+
+    - name: run docker-compose up -d
+      command: docker-compose up -d
+      args:
+        chdir: "{{ minecraft_directory }}"

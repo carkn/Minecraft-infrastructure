@@ -1,0 +1,19 @@
+---
+eccube:
+  version: 4.2.2
+
+php:
+  version: 7.4
+
+db:
+  type: mysql
+#  type: postgresql
+
+  version: "" # mysql8の場合
+#  version: "-5.7" # mysql5.7の場合
+#  version: "13" # postgresql13の場合
+
+  name: eccube
+  user: eccube
+  user_password: "{{ lookup('env', 'db_user_password') }}"
+  root_password: "{{ lookup('env', 'db_root_password') }}"
